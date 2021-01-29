@@ -1,0 +1,5 @@
+git add (Folder/file/(. for all))
+
+git commit -m "message"
+
+git push (pass)

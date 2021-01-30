@@ -22,7 +22,19 @@ program:
 	program base '\n' { printf("%d %s\n", $2.siz, $2.str); }
 	|
 	;
-base : number 		 {sprintf ($$.str,"assign %s to %dt",$1.str,temp++);}	
+base : add		 {printf ("assign %s to t%d \n",$1.str,temp);sprintf ($$.str,"t%d",temp++);}	
+
+add : add '+' mul	 {sprintf ($$.str,"%s plu %s",$1.str,$3.str);}
+add : add '-' mul	 {sprintf ($$.str,"%s min %s",$1.str,$3.str);}
+add : mul		 {sprintf ($$.str,"%s",$1.str);}
+
+mul : mul '*' fac	 {sprintf ($$.str,"%s mul %s",$1.str,$3.str);}
+mul : mul '/' fac	 {sprintf ($$.str,"%s div %s",$1.str,$3.str);}
+mul : fac	  	 {sprintf ($$.str,"%s",$1.str);}
+
+fac : '(' base ')'	 {sprintf ($$.str,"%s",$2.str);}
+fac : number		 {sprintf ($$.str,"%s",$1.str);}
+
 number:
 INTEGER						{ sprintf($$.str,"%s", $1.str);
 										$$.siz = 1;}

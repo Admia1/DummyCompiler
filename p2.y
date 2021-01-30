@@ -11,7 +11,9 @@
 void yyerror(char *);
 int yylex(void);
 int sym[26];
-char* numberParts [4] = {"", "Ten", "Hun", "Tou"};
+char* numberParts [6] = {"", "Ten", "Hun", ")Tou", "Ten", "Hun"};
+int shiftValue [6] = {0,0,0,0,1,1};
+
 int currentNumberSize = 0;
 %}
 %%
@@ -23,7 +25,7 @@ program:
 number:
 INTEGER						{ sprintf($$.str,"%s", $1.str);
 										$$.siz = 1;}
-|INTEGER number		{ sprintf($$.str,"%s%s%s_%s", "", "", $1.str, $2.str);
+|INTEGER number		{ sprintf($$.str,"%s%s%s_%s", ($2.siz>=3?"(":""), $1.str, numberParts[$2.siz%6], $2.str+($2.siz>=4?1:0));
 										$$.siz = $2.siz +1;}
 
 %%

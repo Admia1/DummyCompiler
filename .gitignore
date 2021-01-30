@@ -1,3 +1,5 @@
 *.h
 *.c
 *.out
+*.cc
+!ParserObject.c

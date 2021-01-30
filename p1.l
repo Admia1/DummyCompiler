@@ -1,18 +1,20 @@
 %{
 #include <stdlib.h>
-void yyerror(char *);
 #include "y.tab.h"
+#include "ParserObject.c"
+char* digitName[10] = {"Zer", "One", "Two", "Thr", "Fou", "Fiv", "Six", "Sev", "Nin"};
+
+void yyerror(char *);
 %}
+
 %%
-[a-z]	{
-	yylval = *yytext - 'a';
-	return VARIABLE;
-	}
-[0-9]+	{
-	yylval = atoi(yytext);
+[0-9]	{
+	sprintf(yylval.str, "%s", digitName[(*yytext - '0')]);
+	yylval.siz = 1;
 	return INTEGER;
 	}
-[-+()=/*\n] { return *yytext; }
+
+[-+*/\n] { return *yytext; }
 
 [ \t]	;
 

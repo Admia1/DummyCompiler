@@ -1,37 +1,35 @@
 %token INTEGER VARIABLE
 %left '+' '-'
 %left '*' '/'
+
 %{
+#include <stdlib.h>
+#include <stdio.h>
+#include "ParserObject.c"
+#define YYSTYPE struct ParserObject
+
 void yyerror(char *);
 int yylex(void);
 int sym[26];
-#include <stdlib.h>
+char* numberParts [4] = {"", "Ten", "Hun", "Tou"};
+int currentNumberSize = 0;
 %}
 %%
 program:
-	program statement '\n'
+	program number '\n' { printf("%d %s\n", $2.siz, $2.str); }
 	|
 	;
 
-statement:
-	expr			{ printf("%d\n", $1); }
-	| VARIABLE '=' expr	{ sym[$1] = $3; }
-	;
-
-expr:
-	INTEGER
-	| VARIABLE		{ $$ = sym[$1]; }
-	| expr '+' expr		{ $$ = $1 + $3; }
-	| expr '-' expr		{ $$ = $1 - $3; }
-	| expr '*' expr		{ $$ = $1 * $3; }
-	| expr '/' expr		{ $$ = $1 / $3; }
-	| '(' expr ')'		{ $$ = $2; }
-	;
+number:
+INTEGER						{ sprintf($$.str,"%s", $1.str);
+										$$.siz = 1;}
+|INTEGER number		{ sprintf($$.str,"%s%s%s_%s", "", "", $1.str, $2.str);
+										$$.siz = $2.siz +1;}
 
 %%
 void yyerror(char *s) {
 printf("ERROR : %s\n", s);
-return 0;
+return;
 }
 int main(void) {
 yyparse();

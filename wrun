@@ -1,0 +1,10 @@
+lex p1.l
+yacc p2.y
+move p2.tab.c y.tab.h
+cc lex.yy.c y.tab.h -ll
+del lex.yy.c
+del y.tab.h
+del y.tab.h.gch
+echo "STARTING TO RUN"
+a.out
+del a.out
